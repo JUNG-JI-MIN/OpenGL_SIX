@@ -1,6 +1,10 @@
 #include "FrameWork.h"
 CFrameWork::CFrameWork()
-	:camera(glm::vec3(0.0f, 30.0f, 30.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+	:camera(
+		glm::vec3(100.0f, 100.0f, 100.0f),    // 카메라 위치 (더 높고 멀리)
+		glm::vec3(0.0f, 0.0f, 0.0f),     // 바라보는 점 (필드 중심)
+		glm::vec3(0.0f, 1.0f, 0.0f)        // 위쪽 방향
+	)
 {
 }
 CFrameWork::~CFrameWork()

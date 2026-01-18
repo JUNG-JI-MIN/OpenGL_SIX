@@ -20,5 +20,5 @@
 #include <gl/glm/gtc/matrix_transform.hpp>
 #include <gl/glm/gtx/rotate_vector.hpp>
 using namespace std;
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 1024
+#define WINDOW_HEIGHT 800

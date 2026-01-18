@@ -36,7 +36,8 @@ void CScene::GenerateField(int x, int z, CubeType ownerType)
 
 	std::uniform_int_distribution<int> dist(0, candidates.size() - 1);
 	CubeType selectedType = candidates[dist(rng)];
-	field[x + 10][z + 10] = selectedType;
+	field[x][z] = selectedType;
+
 
 	// 재귀적으로 인접한 필드 생성
 	GenerateField(x + 1, z, selectedType);
@@ -73,7 +74,7 @@ void CScene::BuildObjects()
 	for (int x = 0; x < 20; x++) {
 		for (int z = 0; z < 20; z++) {
 			if (field[x][z] != CubeType::None) {
-				CGameObject obj(glm::vec3(x * 2.0f, 0.0f, z * 2.0f));
+				CGameObject obj(glm::vec3((x - 10) * 2.0f, 0.0f, (z - 10) * 2.0f));
 				obj.SetObject(&meshes[(int)field[x][z]], nullptr);
 				gameObjects.push_back(obj);
 				cubeCount++;
@@ -101,30 +102,41 @@ void CScene::AnimateObjects()
 		o.Update();
 	}
 }
-
-
-void CScene::Render(GLuint shaderProgramID,CCamera& camera)
+void PrintMatrix(const std::string& name, const glm::mat4& mat)
 {
-	glm::mat4 modelMatrix;
-	glm::mat4 uProj = camera.getProjectionMatrix();
-	
-	glm::mat4 uView = camera.getViewMatrix();
-
-	GLuint u = glGetUniformLocation(shaderProgramID, "v");
-	glUniformMatrix4fv(u, 1, GL_FALSE, glm::value_ptr(uView));
-
-	u = glGetUniformLocation(shaderProgramID, "p");
-	glUniformMatrix4fv(u, 1, GL_FALSE, glm::value_ptr(uProj));
-	for (CGameObject& o : gameObjects) {
-		glm::mat4 uModel = o.GetModelMatrix();
-		glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(uModel)));
-		u = glGetUniformLocation(shaderProgramID, "m");
-		glUniformMatrix4fv(u, 1, GL_FALSE, glm::value_ptr(uModel));
-
-		u = glGetUniformLocation(shaderProgramID, "n");
-		glUniformMatrix3fv(u, 1, GL_FALSE, glm::value_ptr(normalMatrix));
-		o.Render();
+	std::cout << "\n=== " << name << " ===" << std::endl;
+	std::cout << std::fixed << std::setprecision(3);
+	for (int i = 0; i < 4; i++) {
+		std::cout << "[ ";
+		for (int j = 0; j < 4; j++) {
+			std::cout << std::setw(8) << mat[j][i] << " ";
+		}
+		std::cout << "]\n";
 	}
+}
+
+void CScene::Render(GLuint shaderProgramID, CCamera& camera)
+{
+    glm::mat4 uProj = camera.getProjectionMatrix();
+    glm::mat4 uView = camera.getViewMatrix();
+
+    GLuint uLoc_m = glGetUniformLocation(shaderProgramID, "m");
+    GLuint uLoc_v = glGetUniformLocation(shaderProgramID, "v");
+    GLuint uLoc_p = glGetUniformLocation(shaderProgramID, "p");
+	
+    glUniformMatrix4fv(uLoc_v, 1, GL_FALSE, glm::value_ptr(uView));
+    glUniformMatrix4fv(uLoc_p, 1, GL_FALSE, glm::value_ptr(uProj));
+
+	std::cout << "Uniform m location: " << uLoc_m << std::endl;
+	std::cout << "Uniform v location: " << uLoc_v << std::endl;
+	std::cout << "Uniform p location: " << uLoc_p << std::endl;
+
+    for (CGameObject& o : gameObjects) {
+        glm::mat4 uModel = o.GetModelMatrix();
+        glUniformMatrix4fv(uLoc_m, 1, GL_FALSE, glm::value_ptr(uModel));
+        
+        o.Render();
+    }
 }
 
 
