@@ -29,8 +29,10 @@ void CFrameWork::Render(GLint shaderProgramID)
 }
 void CFrameWork::Update()
 {
+	timer.Update();
+
 	if (scene != nullptr) {
-		scene->AnimateObjects();
+		scene->AnimateObjects(timer.GetDeltaTime());
 	}
 }
 void CFrameWork::keyboardInput(unsigned char key, int x, int y) {

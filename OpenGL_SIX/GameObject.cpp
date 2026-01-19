@@ -82,6 +82,12 @@ void CGameObject::SetPosition(glm::vec3 pos)
 }
 
 
+void CGameObject::AddPosition(glm::vec3 deltaPos) 
+{
+    position += deltaPos;
+}
+
+
 glm::quat CGameObject::GetRotation() 
 {
 	return rotation;
@@ -113,8 +119,10 @@ void CGameObject::SetObject(CMesh* m, CTexture* t)
 }
 
 
-void CGameObject::Update() 
+void CGameObject::Update(float deltaTime)
 {
+    // 기본 구현 (아무것도 안 함)
+    // 파생 클래스에서 override해서 사용
 }
 
 
@@ -137,7 +145,14 @@ CGameObject::~CGameObject()
 }
 
 
+void TileRectangle::Update(float deltaTime)
+{
+    if (position.y <= 0.0f) return;
+	glm::vec3 falling = glm::vec3(0.0f, fallingSpeed * deltaTime, 0.0f);
+    AddPosition(falling);
+}
 
-RotateRectangle::~RotateRectangle()
+
+TileRectangle::~TileRectangle()
 {
 }

@@ -74,8 +74,8 @@ void CScene::BuildObjects()
 	for (int x = 0; x < 20; x++) {
 		for (int z = 0; z < 20; z++) {
 			if (field[x][z] != CubeType::None) {
-				CGameObject obj(glm::vec3((x - 10) * 2.0f, 0.0f, (z - 10) * 2.0f));
-				obj.SetObject(&meshes[(int)field[x][z]], nullptr);
+				TileRectangle* obj = new TileRectangle(glm::vec3((x - 10) * 2.0f, 30.0f, (z - 10) * 2.0f));
+				obj->SetObject(&meshes[(int)field[x][z]], nullptr);
 				gameObjects.push_back(obj);
 				cubeCount++;
 			}
@@ -96,10 +96,10 @@ void CScene::RemoveObjects()
 }
 
 
-void CScene::AnimateObjects()
+void CScene::AnimateObjects(float deltaTime)
 {
-	for (CGameObject& o : gameObjects) {
-		o.Update();
+	for (CGameObject* o : gameObjects) {
+		o->Update(deltaTime);
 	}
 }
 void PrintMatrix(const std::string& name, const glm::mat4& mat)
@@ -127,11 +127,11 @@ void CScene::Render(GLuint shaderProgramID, CCamera& camera)
     glUniformMatrix4fv(uLoc_v, 1, GL_FALSE, glm::value_ptr(uView));
     glUniformMatrix4fv(uLoc_p, 1, GL_FALSE, glm::value_ptr(uProj));
 
-    for (CGameObject& o : gameObjects) {
-        glm::mat4 uModel = o.GetModelMatrix();
+    for (CGameObject* o : gameObjects) {
+        glm::mat4 uModel = o->GetModelMatrix();
         glUniformMatrix4fv(uLoc_m, 1, GL_FALSE, glm::value_ptr(uModel));
         
-        o.Render();
+        o->Render();
     }
 }
 

@@ -7,7 +7,7 @@ vector<unsigned int> create_cube_index();
 
 class CGameObject
 {
-private:
+protected:
 	glm::vec3           position = glm::vec3(0.0f);
 	glm::quat           rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 	glm::vec3           scale = glm::vec3(1.0f);
@@ -21,6 +21,7 @@ public:
 
 	glm::vec3			GetPosition();
 	void				SetPosition(glm::vec3 pos);
+	void 				AddPosition(glm::vec3 deltaPos);
 
 	glm::quat			GetRotation();
 	void				SetRotation(glm::quat rot);
@@ -31,17 +32,17 @@ public:
 	void 				SetObject(CMesh* m, CTexture* t);
 	glm::mat4			GetModelMatrix();
 
-	void 				Update();
+	virtual void		Update(float deltaTime);
 	void 				Render();
 };
 
-class RotateRectangle : public CGameObject
+class TileRectangle : public CGameObject
 {
 public:
-	RotateRectangle(glm::vec3 p) : CGameObject(p) {}
-	~RotateRectangle();
+	TileRectangle(glm::vec3 p) : CGameObject(p) {}
+	~TileRectangle();
+	void Update(float deltaTime) override;
 
 private:
-	float angle = 0.0f;
-	float d_angle = 1.0f;
+	float fallingSpeed = -30.0f;
 };

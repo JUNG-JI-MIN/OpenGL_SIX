@@ -36,10 +36,10 @@ public:
 	void AddMesh(); // 메쉬 추가
 	void BuildObjects(); // 매쉬 추가 및 필드생성 후 오브젝트 생성
 	void RemoveObjects(); // 오브젝트 삭제
-	void AnimateObjects(); // 오브젝트 애니메이션 처리
+	void AnimateObjects(float deltaTime); // 오브젝트 애니메이션 처리
 	void Render(GLuint shaderProgramID, CCamera& Camera);
 private:
-	vector<CGameObject>		gameObjects;
+	vector<CGameObject*>	gameObjects;
 	CMesh					meshes[6];
 	CubeType				field[20][20] = { CubeType ::None};
 	int 					numGameObjects = 0;

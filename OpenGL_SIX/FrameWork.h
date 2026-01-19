@@ -1,10 +1,12 @@
 #pragma once
 #include "Scene.h"
+#include "Time.h"
 class CFrameWork
 {
 private:
 	CScene*		scene = NULL;
 	CCamera		camera;
+	CTimer		timer;
 	bool		isRunning = false;
 public:
 	CFrameWork();
