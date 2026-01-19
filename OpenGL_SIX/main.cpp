@@ -1,5 +1,18 @@
 ﻿#include "FrameWork.h"
+
+// 전역 변수 정의 (extern 선언은 FrameWork.h에 있음)
+static GLuint width, height;
+static GLuint shaderProgramID; //--- 세이더 프로그램 이름
+static GLuint vertexShader; //--- 버텍스 세이더 객체
+static GLuint fragmentShader; //--- 프래그먼트 세이더 객체
+static void make_vertexShaders();
+static void make_fragmentShaders();
+static GLuint make_shaderProgram();
+static GLvoid drawScene();
+static GLvoid Reshape(int w, int h);
+
 CFrameWork framework;
+// 파일을 읽어서 문자열로 반환하는 함수
 char* filetobuf(const char* file)
 {
     FILE* fptr;
@@ -92,7 +105,7 @@ GLvoid drawScene() {
     // 뒷면 제거 설정
     glCullFace(GL_BACK);        // 뒷면을 제거
 
-    framework.Render();
+    framework.Render(shaderProgramID);
 
     glutSwapBuffers();
 }

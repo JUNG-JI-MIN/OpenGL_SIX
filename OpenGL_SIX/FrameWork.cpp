@@ -21,7 +21,7 @@ void CFrameWork::Init(CScene* startScene)
 		scene->BuildObjects();
 	}
 }
-void CFrameWork::Render()
+void CFrameWork::Render(GLint shaderProgramID)
 {
 	if (scene != nullptr) {
 		scene->Render(shaderProgramID, camera);

@@ -127,10 +127,6 @@ void CScene::Render(GLuint shaderProgramID, CCamera& camera)
     glUniformMatrix4fv(uLoc_v, 1, GL_FALSE, glm::value_ptr(uView));
     glUniformMatrix4fv(uLoc_p, 1, GL_FALSE, glm::value_ptr(uProj));
 
-	std::cout << "Uniform m location: " << uLoc_m << std::endl;
-	std::cout << "Uniform v location: " << uLoc_v << std::endl;
-	std::cout << "Uniform p location: " << uLoc_p << std::endl;
-
     for (CGameObject& o : gameObjects) {
         glm::mat4 uModel = o.GetModelMatrix();
         glUniformMatrix4fv(uLoc_m, 1, GL_FALSE, glm::value_ptr(uModel));
