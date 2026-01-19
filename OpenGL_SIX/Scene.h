@@ -16,7 +16,7 @@ enum class CubeType {
 };
 // 각 큐브 타입별로 인접할 수 있는 큐브 타입 정의
 static const std::map<CubeType, vector<CubeType>> validNeighbors = {
-	{ CubeType::GreenCube, { CubeType::GreenCube, CubeType::BlueCube, CubeType::WhiteCube } },
+	{ CubeType::GreenCube, { CubeType::GreenCube, CubeType::BlueCube, CubeType::WhiteCube, CubeType::RedCube,CubeType::BlackCube } },
 	{ CubeType::BlueCube, { CubeType::BlueCube, CubeType::GreenCube } },
 	{ CubeType::WhiteCube, { CubeType::WhiteCube, CubeType::GreenCube, CubeType::RedCube } },
 	{ CubeType::RedCube, { CubeType::BlackCube } },
