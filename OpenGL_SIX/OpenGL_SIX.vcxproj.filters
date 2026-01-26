@@ -39,6 +39,9 @@
     <ClInclude Include="Time.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl" />
@@ -67,6 +70,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Time.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

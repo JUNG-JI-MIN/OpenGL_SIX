@@ -126,8 +126,24 @@ void CGameObject::Update(float deltaTime)
 }
 
 
-void CGameObject::Render() 
+void CGameObject::Render(GLuint shaderProgramID)
 {
+    glm::mat4 uModel = GetModelMatrix();
+    glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(uModel)));
+
+    GLuint uLoc_m = glGetUniformLocation(shaderProgramID, "m");
+    GLuint uLoc_n = glGetUniformLocation(shaderProgramID, "n");
+    GLuint uLoc_uTex = glGetUniformLocation(shaderProgramID, "useTexture");
+    GLuint uLoc_Tex = glGetUniformLocation(shaderProgramID, "texture1");
+
+    glUniformMatrix3fv(uLoc_n, 1, GL_FALSE, glm::value_ptr(normalMatrix));
+    glUniformMatrix4fv(uLoc_m, 1, GL_FALSE, glm::value_ptr(uModel));
+	glUniform1i(uLoc_uTex, useTexture ? 1 : 0);
+    glUniform1i(uLoc_Tex, 0);
+
+    if (texture) {
+        texture->Bind();
+    }
 	if (mesh) {
 		mesh->Draw();
 	}
@@ -155,4 +171,39 @@ void TileRectangle::Update(float deltaTime)
 
 TileRectangle::~TileRectangle()
 {
+}
+
+
+void PlayerCube::Update(float deltaTime)
+{
+    glm::vec3 direction = glm::vec3(0.0f);
+    if (moveStatus & Up) {
+        direction.z -= 1.0f;
+    }
+    if (moveStatus & Down) {
+        direction.z += 1.0f;
+    }
+    if (moveStatus & Left) {
+        direction.x -= 1.0f;
+    }
+    if (moveStatus & Right) {
+        direction.x += 1.0f;
+    }
+    if (glm::length(direction) > 0.0f) {
+        direction = glm::normalize(direction);
+        glm::vec3 movement = direction * moveSpeed * deltaTime;
+        AddPosition(movement);
+	}
+}
+
+
+void PlayerCube::SetMoveStatus(unsigned char status)
+{
+	moveStatus |= status;
+}
+
+
+void PlayerCube::UnsetMoveStatus(unsigned char status)
+{
+    moveStatus &= ~status;
 }

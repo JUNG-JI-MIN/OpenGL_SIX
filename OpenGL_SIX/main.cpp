@@ -46,6 +46,11 @@ void onKey(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
+void offkey(unsigned char key, int x, int y) {
+    framework.keyboardUpInput(key, x, y);
+    glutPostRedisplay();
+}
+
 void onSpecialKey(int key, int x, int y) {
     
     glutPostRedisplay();
@@ -85,6 +90,7 @@ void main(int argc, char** argv) //--- 윈도우 출력하고 콜백함수 설�
     glutDisplayFunc(drawScene); //--- 출력 콜백 함수
     glutTimerFunc(16, TimerFunction, 1);  // 60 FPS
     glutKeyboardFunc(onKey); // 키보드
+	glutKeyboardUpFunc(offkey); // 떼기
     glutSpecialFunc(onSpecialKey); // 특수키
     glutSpecialUpFunc(onSpecialKeyUp); // 떼기
     glutMouseFunc(onMouse); // 마우스 콜백 등록
@@ -104,6 +110,10 @@ GLvoid drawScene() {
     glEnable(GL_CULL_FACE);
     // 뒷면 제거 설정
     glCullFace(GL_BACK);        // 뒷면을 제거
+
+	// 투명도 처리를 위한 블렌딩 활성화
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     framework.Render(shaderProgramID);
 

@@ -9,4 +9,5 @@ private:
 public:
     void Load(const char* filePath);
     void Bind();
+    void Delete();
 };

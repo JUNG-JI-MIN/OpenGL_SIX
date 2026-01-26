@@ -32,3 +32,7 @@ void CTexture::Load(const char* filePath) {
 void CTexture::Bind() {
     glBindTexture(GL_TEXTURE_2D, id);
 }
+
+void CTexture::Delete() {
+    glDeleteTextures(1, &id);
+}
