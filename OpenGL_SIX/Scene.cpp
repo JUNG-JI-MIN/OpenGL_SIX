@@ -32,18 +32,8 @@ void CScene::Mouse_Motion(int x, int y)
 
 void CScene::Add_Mesh_Texture()
 {
-	meshes[(int)CubeType::Blue] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)), create_cube_index());
-
-	meshes[(int)CubeType::Red] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)), create_cube_index());
+	meshes[(int)CubeType::White] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(1.5f, 1.5f, 1.5f, 1.0f)), create_cube_index());
 	
-	meshes[(int)CubeType::Green] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)), create_cube_index());
-	
-	meshes[(int)CubeType::White] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), create_cube_index());
-	
-	meshes[(int)CubeType::Black] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)), create_cube_index());
-	
-	meshes[(int)CubeType::Cyan] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 1.0f, 1.0f, 1.0f)), create_cube_index());
-
     meshes[(int)CubeType::Yellow] = CMesh(create_ground_plane(100.0f, 100.0f), create_ground_index());
 
 
@@ -52,7 +42,9 @@ void CScene::Add_Mesh_Texture()
 		meshes[i].Init();
 	}
 
-	textures.Load("Res/silver.png");
+	textures[0].Load("Res/red_tile.png");
+	textures[1].Load("Res/green_tile.png");
+	textures[2].Load("Res/blue_tile.png");
 }
 
 
@@ -62,10 +54,11 @@ void CScene::BuildObjects()
     Add_Mesh_Texture(); // 메쉬 추가
 
 	player = new PlayerCube(glm::vec3(0.0f, 0.0f, 0.0f));
+	player->SetUseTexture(false);
 	player->SetObject(&meshes[(int)CubeType::White], nullptr);
 
 	TileRectangle* ground = new TileRectangle(glm::vec3(0.0f, 0.0f, 0.0f));
-	ground->SetObject(&meshes[(int)CubeType::Yellow], &textures);
+	ground->SetObject(&meshes[(int)CubeType::Yellow], &textures[1]);
 	gameObjects.push_back(ground);
 
 	camera.position = glm::vec3(0.0f, 20.0f, 30.0f);
@@ -81,8 +74,11 @@ void CScene::RemoveObjects()
 	for (auto& wave : scanwaves) {
 		delete wave;
 	}
-
-	textures.Delete();
+	
+	for (int i = 0; i < 3;i++) {
+		textures[i].Delete();
+	}
+	
 
     for (auto& o : gameObjects) {
 		delete o;
@@ -123,13 +119,14 @@ void CScene::AnimateObjects(float deltaTime)
 	}
 	if (player) player->Update(deltaTime);
 
-	for (CScanWave* scanwave : scanwaves) {
-		if (scanwave) {
-			scanwave->Update(deltaTime);
-			if (!scanwave->IsInWaveRange()) {
-				delete scanwave;
-				scanwave = nullptr;
-			}
+	for (auto it = scanwaves.begin(); it != scanwaves.end(); ) {
+		(*it)->Update(deltaTime);
+		if (!(*it)->IsInWaveRange()) {
+			delete* it;
+			it = scanwaves.erase(it);
+		}
+		else {
+			++it;
 		}
 	}
 
@@ -153,6 +150,8 @@ void CScene::Render(GLuint shaderProgramID)
 			scanwaves[i]->GetRadius());
 		glUniform1f(glGetUniformLocation(shaderProgramID, (base + "range").c_str()),
 			scanwaves[i]->GetRange());
+		glUniform1f(glGetUniformLocation(shaderProgramID, (base + "MaxRadius").c_str()),
+			scanwaves[i]->GetMaxRange());
 	}
 
 	// 2. 뷰, 프로젝션 행렬 셰이더에 전달

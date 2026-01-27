@@ -44,7 +44,7 @@ private:
 	PlayerCube*				player;
 	CCamera					camera;
 	CMesh					meshes[7];
-	CTexture				textures;
+	CTexture				textures[3];
 	vector<CScanWave*>		scanwaves;
 
 	int 					numGameObjects = 0;

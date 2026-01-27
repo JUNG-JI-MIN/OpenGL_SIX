@@ -2,7 +2,7 @@
 
 CScanWave::CScanWave(glm::vec3 p)
 {
-	WaveVelocity = 10.0f;
+	WaveVelocity = 30.0f;
 	WaveRadian = 0.0f;
 	WaveRange = 10.0f;
 	MaxRange = 50.0f;

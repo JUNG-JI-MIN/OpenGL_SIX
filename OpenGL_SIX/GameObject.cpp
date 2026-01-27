@@ -140,6 +140,12 @@ void CGameObject::SetObject(CMesh* m, CTexture* t)
 }
 
 
+void CGameObject::SetUseTexture(bool use)
+{
+    useTexture = use;
+}
+
+
 void CGameObject::Update(float deltaTime)
 {
     // 기본 구현 (아무것도 안 함)

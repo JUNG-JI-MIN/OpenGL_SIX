@@ -35,6 +35,8 @@ public:
 	void 				SetObject(CMesh* m, CTexture* t);
 	glm::mat4			GetModelMatrix();
 
+	void 				SetUseTexture(bool use);
+
 	virtual void		Update(float deltaTime);
 	void 				Render(GLuint shaderProgramID);
 };

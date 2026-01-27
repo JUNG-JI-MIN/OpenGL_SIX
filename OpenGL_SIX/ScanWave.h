@@ -25,6 +25,7 @@ public:
 	glm::vec3 GetCenter() { return position; }
 	float GetRadius() { return WaveRadian; }
 	float GetRange() { return WaveRange; }
+	float GetMaxRange() { return MaxRange; }
 
 	void Update(float deltatime);
 };
