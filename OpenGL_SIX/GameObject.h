@@ -4,7 +4,8 @@
 #include "Texture.h"
 vector<Vertex> create_cube(float x = 1, float y = 1, float z = 1, glm::vec4 color = { 0.5f, 0.5f, 0.5f, 1.0f });
 vector<unsigned int> create_cube_index();
-
+vector<Vertex> create_ground_plane(float width, float depth);
+vector<unsigned int> create_ground_index();
 class CGameObject
 {
 protected:

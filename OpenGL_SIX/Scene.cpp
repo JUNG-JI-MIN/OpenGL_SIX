@@ -75,7 +75,8 @@ void CScene::Add_Mesh_Texture()
 	
 	meshes[(int)CubeType::Cyan] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 1.0f, 1.0f, 1.0f)), create_cube_index());
 
-	meshes[(int)CubeType::Yellow] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 0.0f, 1.0f)), create_cube_index());
+    meshes[(int)CubeType::Yellow] = CMesh(create_ground_plane(100.0f, 100.0f), create_ground_index());
+
 
 
 	for (int i = 0; i < 7; i++) {
@@ -93,18 +94,32 @@ void CScene::BuildObjects()
 
 	player = new PlayerCube(glm::vec3(0.0f, 0.0f, 0.0f));
 	player->SetObject(&meshes[(int)CubeType::White], &textures);
-	gameObjects.push_back(player);
-	camera.position = glm::vec3(0.0f, 10.0f, 15.0f);
+
+	TileRectangle* ground = new TileRectangle(glm::vec3(0.0f, 0.0f, 0.0f));
+	ground->SetObject(&meshes[(int)CubeType::Yellow], &textures);
+	gameObjects.push_back(ground);
+
+	camera.position = glm::vec3(0.0f, 20.0f, 30.0f);
 }
 
 
 void CScene::RemoveObjects()
 {
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 7; i++) {
 		meshes[i].Delete();
 	}
+
 	textures.Delete();
+
+    for (auto& o : gameObjects) {
+		delete o;
+    }
 	gameObjects.clear();
+
+    if (player) {
+        delete player;
+        player = nullptr;
+    }
 }
 
 
@@ -125,6 +140,7 @@ void CScene::AnimateObjects(float deltaTime)
 	for (CGameObject* o : gameObjects) {
 		o->Update(deltaTime);
 	}
+	if (player) player->Update(deltaTime);
 }
 
 void CScene::Render(GLuint shaderProgramID)
@@ -141,6 +157,10 @@ void CScene::Render(GLuint shaderProgramID)
 
     for (CGameObject* o : gameObjects) {
         o->Render(shaderProgramID);
+    }
+
+    if (player) {
+        player->Render(shaderProgramID);
     }
 }
 

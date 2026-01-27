@@ -63,7 +63,28 @@ vector<unsigned int> create_cube_index() {
     };
     return cube_indices;
 }
+vector<Vertex> create_ground_plane(float width, float depth) {
+    glm::vec4 color = { 0.5f, 0.5f, 0.5f, 1.0f };
+    float halfWidth = width / 2.0f;
+    float halfDepth = depth / 2.0f;
 
+    vector<Vertex> ground_vertices = {
+        // Y = -5 높이에 바닥 배치 (아래로 내려감)
+        { {-halfWidth, -5.0f,  halfDepth}, color, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} }, // 0
+        { { halfWidth, -5.0f,  halfDepth}, color, {0.0f, 1.0f, 0.0f}, {10.0f, 0.0f} }, // 1
+        { { halfWidth, -5.0f, -halfDepth}, color, {0.0f, 1.0f, 0.0f}, {10.0f, 10.0f} }, // 2
+        { {-halfWidth, -5.0f, -halfDepth}, color, {0.0f, 1.0f, 0.0f}, {0.0f, 10.0f} }, // 3
+    };
+    return ground_vertices;
+}
+
+vector<unsigned int> create_ground_index() {
+    vector<unsigned int> ground_indices = {
+        0, 1, 2,
+        0, 2, 3,
+    };
+    return ground_indices;
+}
 CGameObject::CGameObject(glm::vec3 p)
 {
 	SetPosition(p);
@@ -158,6 +179,7 @@ glm::mat4 CGameObject::GetModelMatrix()
 
 CGameObject::~CGameObject() 
 {
+
 }
 
 
