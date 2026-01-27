@@ -2,7 +2,7 @@
 #include "stdafx.h"
 class CCamera {
 public:
-    glm::vec3           position    =   glm::vec3{0,0,0};
+    glm::vec3           position    =   glm::vec3{ 0,0,0 };
     glm::vec3           target      =   glm::vec3{ 0,0,0 };
     glm::vec3           up          =   glm::vec3{ 0,1,0 };
 

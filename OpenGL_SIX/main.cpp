@@ -65,6 +65,7 @@ void onMouse(int button, int state, int x, int y) {
 
 }
 void onMouseMotion(int x, int y) {
+	framework.mousemove(x, y);
     glutPostRedisplay();
 }
 void main(int argc, char** argv) //--- 윈도우 출력하고 콜백함수 설정

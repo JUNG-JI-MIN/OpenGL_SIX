@@ -58,6 +58,40 @@ void CScene::keyboard_UpInput(unsigned char key, int x, int y)
 void CScene::Mouse_Input(int button, int state, int x, int y)
 {
 	if (!player) return;
+
+    if (button == GLUT_LEFT_BUTTON) {
+        if (state == GLUT_DOWN) {
+            isMousePressed = true;
+            lastMouseX = x;
+            lastMouseY = y;
+        }
+        else if (state == GLUT_UP) {
+            isMousePressed = false;
+        }
+    }
+}
+
+
+void CScene::Mouse_Motion(int x, int y)
+{
+    if (!player || !isMousePressed) return;
+
+    if (lastMouseX == -1) {
+        lastMouseX = x;
+        lastMouseY = y;
+        return;
+    }
+
+    // 마우스 이동량 계산
+    float deltaX = static_cast<float>(x - lastMouseX);
+    float deltaY = static_cast<float>(y - lastMouseY);
+
+    // 플레이어 방향 업데이트
+    player->UpdateDirection(deltaX, deltaY);
+
+    // 현재 위치 저장
+    lastMouseX = x;
+    lastMouseY = y;
 }
 
 
@@ -141,6 +175,8 @@ void CScene::AnimateObjects(float deltaTime)
 		o->Update(deltaTime);
 	}
 	if (player) player->Update(deltaTime);
+
+	TraceCameraToPlayer();
 }
 
 void CScene::Render(GLuint shaderProgramID)

@@ -67,11 +67,16 @@ public:
 	void				Update(float deltaTime) override;
 	void 				SetMoveStatus(unsigned char status);
 	void 				UnsetMoveStatus(unsigned char status);
+	void				UpdateDirection(float deltaX, float deltaY);
 
 	glm::vec3 			GetMoveDirection() { return moveDirection; }
+	
 private:
 	unsigned char		moveStatus = None;
 	float 				moveSpeed = 10.0f;
 	glm::vec3			moveDirection = glm::vec3{ 1.0f , 0.0f , 0.0f };
 
+	float				yaw = -90.0f; // Y축 회전 각도
+	float				pitch = 0.0f; // X축 회전 각도
+	float				sensitivity = 0.1f;
 };

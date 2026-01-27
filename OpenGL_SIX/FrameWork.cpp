@@ -45,3 +45,8 @@ void CFrameWork::mouseInput(int button, int state, int x, int y) {
 		scene->Mouse_Input(button, state, x, y);
 	}
 }
+void CFrameWork::mousemove(int x, int y) {
+	if (scene != nullptr) {
+		scene->Mouse_Motion(x, y);
+	}
+}

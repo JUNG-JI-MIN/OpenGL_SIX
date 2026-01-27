@@ -27,6 +27,7 @@ public:
 	void keyboard_UpInput(unsigned char key, int x, int y);
 	void Keyboard_Input(unsigned char key, int x, int y);
 	void Mouse_Input(int button, int state, int x, int y);
+	void Mouse_Motion(int x, int y);
 
 	void Add_Mesh_Texture(); // 메쉬 추가
 	void BuildObjects(); // 매쉬 추가 및 필드생성 후 오브젝트 생성
@@ -44,4 +45,7 @@ private:
 	Light					light;
 
 	int 					numGameObjects = 0;
+	float					lastMouseX = 400;
+	float					lastMouseY = 300;
+	bool					isMousePressed = false;
 };

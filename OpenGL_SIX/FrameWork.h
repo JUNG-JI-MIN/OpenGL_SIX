@@ -17,5 +17,6 @@ public:
 
 	void keyboardUpInput(unsigned char key, int x, int y);
 	void keyboardInput(unsigned char key, int x, int y);
+	void mousemove(int x, int y);
 	void mouseInput(int button, int state, int x, int y);
 };
