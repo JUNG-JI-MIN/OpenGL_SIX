@@ -22,9 +22,9 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FrameWork.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="Light.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ScanWave.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Texture.h" />
@@ -38,10 +38,10 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FrameWork.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ScanWave.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
