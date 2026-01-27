@@ -1,4 +1,5 @@
 #version 330 core
+
 struct LIGHT{
     vec3 position;  // pos → position으로 변경
     vec3 dir;

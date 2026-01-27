@@ -12,9 +12,10 @@ public:
     float               f = 2000.0f; 
     float               orthoScale = 10.0f;
 
-    CCamera(glm::vec3 pos, glm::vec3 tar, glm::vec3 u);
+    CCamera();
     ~CCamera();
 
+    void SetCamera(glm::vec3 pos, glm::vec3 tar, glm::vec3 u);
     glm::mat4 getViewMatrix();
     glm::mat4 getProjectionMatrix();
 };

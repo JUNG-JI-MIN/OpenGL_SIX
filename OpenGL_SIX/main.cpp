@@ -5,8 +5,8 @@ static GLuint width, height;
 static GLuint shaderProgramID; //--- 세이더 프로그램 이름
 static GLuint vertexShader; //--- 버텍스 세이더 객체
 static GLuint fragmentShader; //--- 프래그먼트 세이더 객체
-static void make_vertexShaders();
-static void make_fragmentShaders();
+static void make_vertexShaders(const char* filePath);
+static void make_fragmentShaders(const char* filePath);
 static GLuint make_shaderProgram();
 static GLvoid drawScene();
 static GLvoid Reshape(int w, int h);
@@ -82,8 +82,8 @@ void main(int argc, char** argv) //--- 윈도우 출력하고 콜백함수 설�
     glewExperimental = GL_TRUE;
     glewInit();
     //--- 세이더 읽어와서 세이더 프로그램 만들기: 사용자 정의함수 호출
-    make_vertexShaders(); //--- 버텍스 세이더 만들기
-    make_fragmentShaders(); //--- 프래그먼트 세이더 만들기
+    make_vertexShaders("vertex.glsl"); //--- 버텍스 세이더 만들기
+    make_fragmentShaders("fragment.glsl"); //--- 프래그먼트 세이더 만들기
     shaderProgramID = make_shaderProgram(); //--- 세이더 프로그램 만들기
 
 	framework.Init(new CScene());
@@ -102,6 +102,7 @@ void main(int argc, char** argv) //--- 윈도우 출력하고 콜백함수 설�
 
 GLvoid drawScene() {
     glViewport(0, 0, width, height);
+
     glClearColor(0.5f,0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(shaderProgramID);
@@ -115,6 +116,7 @@ GLvoid drawScene() {
 	// 투명도 처리를 위한 블렌딩 활성화
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
 
     framework.Render(shaderProgramID);
 
@@ -129,12 +131,12 @@ GLvoid Reshape(int w, int h) //--- 콜백 함수: 다시 그리기 콜백 함수
 
 
 
-void make_vertexShaders()
+void make_vertexShaders(const char* filePath)
 {
     GLchar* vertexSource;
     //--- 버텍스 세이더 읽어 저장하고 컴파일 하기
     //--- filetobuf: 사용자정의 함수로 텍스트를 읽어서 문자열에 저장하는 함수
-    vertexSource = filetobuf("vertex.glsl");
+    vertexSource = filetobuf(filePath);
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexSource, NULL);
     glCompileShader(vertexShader);
@@ -149,11 +151,11 @@ void make_vertexShaders()
     }
 }
 
-void make_fragmentShaders()
+void make_fragmentShaders(const char* filePath)
 {
     GLchar* fragmentSource;
     //--- 프래그먼트 세이더 읽어 저장하고 컴파일하기
-    fragmentSource = filetobuf("fragment.glsl"); // 프래그세이더 읽어오기
+    fragmentSource = filetobuf(filePath); // 프래그세이더 읽어오기
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShader);

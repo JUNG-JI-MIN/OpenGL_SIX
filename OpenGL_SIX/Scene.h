@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 #include "Light.h"
+#include "Player.h"
 #include <random>
 #include <stdint.h>
 static std::mt19937 rng{ std::random_device{}() };
@@ -45,7 +46,4 @@ private:
 	Light					light;
 
 	int 					numGameObjects = 0;
-	float					lastMouseX = 400;
-	float					lastMouseY = 300;
-	bool					isMousePressed = false;
 };

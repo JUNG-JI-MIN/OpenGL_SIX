@@ -9,5 +9,7 @@ private:
 public:
     void Load(const char* filePath);
     void Bind();
+	void Unbind();
     void Delete();
+    GLuint GetID() const { return id; }
 };

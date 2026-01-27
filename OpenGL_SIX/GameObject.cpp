@@ -70,10 +70,10 @@ vector<Vertex> create_ground_plane(float width, float depth) {
 
     vector<Vertex> ground_vertices = {
         // Y = -5 높이에 바닥 배치 (아래로 내려감)
-        { {-halfWidth, -5.0f,  halfDepth}, color, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} }, // 0
-        { { halfWidth, -5.0f,  halfDepth}, color, {0.0f, 1.0f, 0.0f}, {10.0f, 0.0f} }, // 1
-        { { halfWidth, -5.0f, -halfDepth}, color, {0.0f, 1.0f, 0.0f}, {10.0f, 10.0f} }, // 2
-        { {-halfWidth, -5.0f, -halfDepth}, color, {0.0f, 1.0f, 0.0f}, {0.0f, 10.0f} }, // 3
+        { {-halfWidth, -1.f,  halfDepth}, color, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} }, // 0
+        { { halfWidth, -1.f,  halfDepth}, color, {0.0f, 1.0f, 0.0f}, {10.0f, 0.0f} }, // 1
+        { { halfWidth, -1.f, -halfDepth}, color, {0.0f, 1.0f, 0.0f}, {10.0f, 10.0f} }, // 2
+        { {-halfWidth, -1.f, -halfDepth}, color, {0.0f, 1.0f, 0.0f}, {0.0f, 10.0f} }, // 3
     };
     return ground_vertices;
 }
@@ -196,65 +196,3 @@ TileRectangle::~TileRectangle()
 }
 
 
-void PlayerCube::Update(float deltaTime)
-{
-    glm::vec3 direction = glm::vec3(0.0f);
-
-    // 전방 벡터
-    glm::vec3 forward = glm::normalize(moveDirection);
-
-    // 오른쪽 벡터 = forward와 월드 up(0,1,0)의 외적
-    glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0.0f, 1.0f, 0.0f)));
-
-    if (moveStatus & Up) {
-        direction += forward;
-    }
-    if (moveStatus & Down) {
-        direction -= forward;
-    }
-    if (moveStatus & Left) {
-        direction -= right;
-    }
-    if (moveStatus & Right) {
-        direction += right;
-    }
-
-    if (glm::length(direction) > 0.0f) {
-        direction = glm::normalize(direction);
-        glm::vec3 movement = direction * moveSpeed * deltaTime;
-		movement.y = 0.0f; // 수평 이동만
-        AddPosition(movement);
-    }
-}
-
-
-void PlayerCube::UpdateDirection(float deltaX, float deltaY)
-{
-    // 마우스 이동량으로 yaw, pitch 업데이트
-    yaw += deltaX * sensitivity;
-    pitch -= deltaY * sensitivity;  // Y축은 반대로 (화면 좌표계)
-
-    // pitch 제한 (위아래로 너무 많이 안 보게)
-    if (pitch > 89.0f) pitch = 89.0f;
-    if (pitch < -89.0f) pitch = -89.0f;
-
-    // yaw, pitch로부터 방향 벡터 계산
-    glm::vec3 newDirection;
-    newDirection.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    newDirection.y = sin(glm::radians(pitch));
-    newDirection.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
-    moveDirection = glm::normalize(newDirection);
-}
-
-
-void PlayerCube::SetMoveStatus(unsigned char status)
-{
-	moveStatus |= status;
-}
-
-
-void PlayerCube::UnsetMoveStatus(unsigned char status)
-{
-    moveStatus &= ~status;
-}

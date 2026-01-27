@@ -1,7 +1,12 @@
 #include "Camera.h"
 
-CCamera::CCamera(glm::vec3 pos, glm::vec3 tar, glm::vec3 u)
-    : position(pos), target(tar), up(u) {
+CCamera::CCamera()
+{
+}
+void CCamera::SetCamera(glm::vec3 pos, glm::vec3 tar, glm::vec3 u) {
+    position = pos;
+    target = tar;
+    up = u;
 }
 glm::mat4 CCamera::getViewMatrix() {
     return glm::lookAt(position, target, up);

@@ -29,10 +29,18 @@ void CTexture::Load(const char* filePath) {
     glBindTexture(GL_TEXTURE_2D, 0); // 언바인드
 }
 
+
 void CTexture::Bind() {
     glBindTexture(GL_TEXTURE_2D, id);
 }
 
+void CTexture::Unbind() {
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 void CTexture::Delete() {
-    glDeleteTextures(1, &id);
+    if (id != 0) {
+        glDeleteTextures(1, &id);
+        id = 0;
+    }
 }
