@@ -15,6 +15,8 @@ protected:
 	CMesh*				mesh = nullptr;
 	CTexture*			texture = nullptr;
 
+	bool 				useTexture = true;
+
 public:
 	CGameObject(glm::vec3 p);
 	~CGameObject();
@@ -33,7 +35,7 @@ public:
 	glm::mat4			GetModelMatrix();
 
 	virtual void		Update(float deltaTime);
-	void 				Render();
+	void 				Render(GLuint shaderProgramID);
 };
 
 class TileRectangle : public CGameObject
@@ -41,8 +43,34 @@ class TileRectangle : public CGameObject
 public:
 	TileRectangle(glm::vec3 p) : CGameObject(p) {}
 	~TileRectangle();
-	void Update(float deltaTime) override;
+	void				Update(float deltaTime) override;
 
 private:
-	float fallingSpeed = -30.0f;
+	float				fallingSpeed = -30.0f;
+};
+
+enum Direction : unsigned char {
+	None = 0,      // 0000
+	Up = 1 << 0, // 0001 (1)
+	Down = 1 << 1, // 0010 (2)
+	Left = 1 << 2, // 0100 (4)
+	Right = 1 << 3  // 1000 (8)
+};
+
+class PlayerCube : public CGameObject
+{
+public:
+
+	PlayerCube(glm::vec3 p) : CGameObject(p) {}
+	~PlayerCube() {}
+	void				Update(float deltaTime) override;
+	void 				SetMoveStatus(unsigned char status);
+	void 				UnsetMoveStatus(unsigned char status);
+
+	glm::vec3 			GetMoveDirection() { return moveDirection; }
+private:
+	unsigned char		moveStatus = None;
+	float 				moveSpeed = 10.0f;
+	glm::vec3			moveDirection = glm::vec3{ 1.0f , 0.0f , 0.0f };
+
 };

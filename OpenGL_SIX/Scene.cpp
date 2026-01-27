@@ -1,89 +1,100 @@
 #include "Scene.h"
 
 CScene::CScene()
+	:camera(
+		glm::vec3(0.0f, 0.0f, 0.0f),    // 카메라 위치 (더 높고 멀리)
+		glm::vec3(0.0f, 0.0f, 0.0f),     // 바라보는 점 (필드 중심)
+		glm::vec3(0.0f, 1.0f, 0.0f)        // 위쪽 방향
+	)
+
 {
-	for (int x = 0; x < 20; x++) {
-		for (int z = 0; z < 20; z++) {
-			field[x][z] = CubeType::None;
-		}
-	}
+    light.Set_light();
 }
 
 
 void CScene::Keyboard_Input(unsigned char key, int x, int y)
 {
-	// 키보드 입력 처리 코드 작성
+    if (!player) return;
+
+    switch (key)
+    {
+    case 'w': case 'W':
+        player->SetMoveStatus(Up);
+        break;
+    case 's': case 'S':
+        player->SetMoveStatus(Down);
+        break;
+    case 'a': case 'A':
+        player->SetMoveStatus(Left);
+        break;
+    case 'd': case 'D':
+        player->SetMoveStatus(Right);
+        break;
+    }
+}
+
+void CScene::keyboard_UpInput(unsigned char key, int x, int y)
+{
+    if (!player) return;
+
+    switch (key)
+    {
+    case 'w': case 'W':
+        player->UnsetMoveStatus(Up);
+        break;
+    case 's': case 'S':
+        player->UnsetMoveStatus(Down);
+        break;
+    case 'a': case 'A':
+        player->UnsetMoveStatus(Left);
+        break;
+    case 'd': case 'D':
+        player->UnsetMoveStatus(Right);
+        break;
+    }
 }
 
 
 void CScene::Mouse_Input(int button, int state, int x, int y)
 {
-	// 마우스 입력 처리 코드 작성
+	if (!player) return;
 }
 
 
-void CScene::GenerateField(int x, int z, CubeType ownerType)
+void CScene::Add_Mesh_Texture()
 {
-	if (x < 0 || x >= 20 || z < 0 || z >= 20) return;
-	if (field[x][z] != CubeType::None) return;
+	meshes[(int)CubeType::Blue] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)), create_cube_index());
 
-	auto it = validNeighbors.find(ownerType);
-	if (it == validNeighbors.end()) return;
+	meshes[(int)CubeType::Red] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)), create_cube_index());
 	
-	const vector<CubeType>& candidates = it->second;
-
-	if (candidates.empty()) return;
-
-	std::uniform_int_distribution<int> dist(0, candidates.size() - 1);
-	CubeType selectedType = candidates[dist(rng)];
-	field[x][z] = selectedType;
-
-
-	// 재귀적으로 인접한 필드 생성
-	GenerateField(x + 1, z, selectedType);
-	GenerateField(x - 1, z, selectedType);
-	GenerateField(x, z + 1, selectedType);
-	GenerateField(x, z - 1, selectedType);
-}
-
-
-void CScene::AddMesh()
-{
-	meshes[(int)CubeType::BlueCube] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 0.0f, 1.0f, 1.0f)), create_cube_index());
-
-	meshes[(int)CubeType::RedCube] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)), create_cube_index());
+	meshes[(int)CubeType::Green] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)), create_cube_index());
 	
-	meshes[(int)CubeType::GreenCube] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)), create_cube_index());
+	meshes[(int)CubeType::White] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), create_cube_index());
 	
-	meshes[(int)CubeType::WhiteCube] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)), create_cube_index());
+	meshes[(int)CubeType::Black] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)), create_cube_index());
 	
-	meshes[(int)CubeType::BlackCube] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)), create_cube_index());
-	
-	for (int i = 0; i < 5; i++) {
+	meshes[(int)CubeType::Cyan] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(0.0f, 1.0f, 1.0f, 1.0f)), create_cube_index());
+
+	meshes[(int)CubeType::Yellow] = CMesh(create_cube(1.0f, 1.0f, 1.0f, glm::vec4(1.0f, 1.0f, 0.0f, 1.0f)), create_cube_index());
+
+
+	for (int i = 0; i < 7; i++) {
 		meshes[i].Init();
 	}
+
+	textures.Load("Res/silver.png");
 }
 
 
 void CScene::BuildObjects()
 {
 	int cubeCount = 0;
-	AddMesh(); // 메쉬 추가
-	GenerateField(10, 10, CubeType::GreenCube); // 필드 생성 시작
-	
-	for (int x = 0; x < 20; x++) {
-		for (int z = 0; z < 20; z++) {
-			if (field[x][z] != CubeType::None) {
-				TileRectangle* obj = new TileRectangle(glm::vec3((x - 10) * 2.0f, 30.0f, (z - 10) * 2.0f));
-				obj->SetObject(&meshes[(int)field[x][z]], nullptr);
-				gameObjects.push_back(obj);
-				cubeCount++;
-			}
-		}
-	}
-	// Scene.cpp의 BuildObjects() 끝에 추가
-	std::cout << "Meshes created: " << cubeCount << std::endl;
-	std::cout << "GameObjects: " << gameObjects.size() << std::endl;
+    Add_Mesh_Texture(); // 메쉬 추가
+
+	player = new PlayerCube(glm::vec3(0.0f, 0.0f, 0.0f));
+	player->SetObject(&meshes[(int)CubeType::White], &textures);
+	gameObjects.push_back(player);
+	camera.position = glm::vec3(0.0f, 10.0f, 15.0f);
 }
 
 
@@ -92,7 +103,20 @@ void CScene::RemoveObjects()
 	for (int i = 0; i < 5; i++) {
 		meshes[i].Delete();
 	}
+	textures.Delete();
 	gameObjects.clear();
+}
+
+
+void CScene::TraceCameraToPlayer()
+{
+    if (!player) return;
+    glm::vec3 playerD = player->GetMoveDirection();
+    glm::vec3 playerPos = player->GetPosition();
+    camera.position = playerPos + glm::vec3(-playerD.x * 10,
+                                            -playerD.y * 10,
+                                            -playerD.z * 10);
+	camera.target = playerPos;
 }
 
 
@@ -102,25 +126,13 @@ void CScene::AnimateObjects(float deltaTime)
 		o->Update(deltaTime);
 	}
 }
-void PrintMatrix(const std::string& name, const glm::mat4& mat)
-{
-	std::cout << "\n=== " << name << " ===" << std::endl;
-	std::cout << std::fixed << std::setprecision(3);
-	for (int i = 0; i < 4; i++) {
-		std::cout << "[ ";
-		for (int j = 0; j < 4; j++) {
-			std::cout << std::setw(8) << mat[j][i] << " ";
-		}
-		std::cout << "]\n";
-	}
-}
 
-void CScene::Render(GLuint shaderProgramID, CCamera& camera)
+void CScene::Render(GLuint shaderProgramID)
 {
     glm::mat4 uProj = camera.getProjectionMatrix();
     glm::mat4 uView = camera.getViewMatrix();
-
-    GLuint uLoc_m = glGetUniformLocation(shaderProgramID, "m");
+    
+	light.Init(shaderProgramID, camera.position);
     GLuint uLoc_v = glGetUniformLocation(shaderProgramID, "v");
     GLuint uLoc_p = glGetUniformLocation(shaderProgramID, "p");
 	
@@ -128,10 +140,7 @@ void CScene::Render(GLuint shaderProgramID, CCamera& camera)
     glUniformMatrix4fv(uLoc_p, 1, GL_FALSE, glm::value_ptr(uProj));
 
     for (CGameObject* o : gameObjects) {
-        glm::mat4 uModel = o->GetModelMatrix();
-        glUniformMatrix4fv(uLoc_m, 1, GL_FALSE, glm::value_ptr(uModel));
-        
-        o->Render();
+        o->Render(shaderProgramID);
     }
 }
 
